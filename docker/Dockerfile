@@ -1,10 +1,10 @@
 FROM node:18-alpine AS stripes_build
 
 # Set build arguments with default values
-ARG OKAPI_URL=http://localhost:9130
-ARG TENANT_ID=diku
+ARG OKAPI_URL=https://folio-dev-api.stanford.edu
+ARG TENANT_ID=sul
 ARG BUILD_ARGS="--okapi $OKAPI_URL --tenant $TENANT_ID"
-ARG REGISTRY=folioci
+ARG REGISTRY=folio
 ARG CXXFLAGS="-std=c++17"
 
 # Define the home directory for Stripes
@@ -22,8 +22,11 @@ RUN apk upgrade --no-cache && \
     yarn config set python /usr/bin/python3 && \
     yarn config set @folio:registry https://repository.folio.org/repository/npm-$REGISTRY/ && \
     yarn install && \
-    yarn build-module-descriptors && \
-    yarn build output $BUILD_ARGS
+    yarn build-module-descriptors
+
+COPY tenant-assets/MainNav.css node_modules/@folio/stripes-core/src/components/MainNav
+COPY tenant-assets/Pane.css node_modules/@folio/stripes-components/lib/Pane
+RUN yarn build output $BUILD_ARGS
 
 FROM nginx:stable-alpine
 
@@ -43,5 +46,7 @@ COPY --from=stripes_build $STRIPES_HOME/yarn.lock /usr/share/nginx/html/yarn.loc
 # Configure nginx and entrypoint
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY docker/entrypoint.sh /usr/bin/entrypoint.sh
+RUN mkdir /usr/share/nginx/html/sul
+COPY tenant-assets/logo.png /usr/share/nginx/html/sul/logo.png
 
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
