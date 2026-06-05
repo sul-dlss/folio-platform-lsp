@@ -3,32 +3,37 @@ const modules = require("./stripes.modules");
 module.exports = {
   okapi: {
     // application gateway
-    'url': '${kongUrl}',
-    'uiUrl': '${tenantUrl}',
+    'url': 'https://folio-dev-api.stanford.edu',
+    'uiUrl': 'https://folio-dev.stanford.edu',
     // authentication details: url, secret, clientId
-    'authnUrl': '${keycloakUrl}',
+    'authnUrl': 'https://keycloak-folio-dev.stanford.edu',
   },
   config: {
     isEureka: true,
-    hasAllPerms: ${hasAllPerms},
+    hasAllPerms: false,
+    welcomeMessage: 'FOLIO DEV Sunflower CSP 7 - Stanford University',
+    platformName: 'FOLIO DEV Sunflower CSP 7',
+    helpUrl: 'https://sites.google.com/stanford.edu/folio-training-central/help',
     logCategories: 'core,path,action,xhr',
     useSecureTokens: true,
     idleSessionWarningSeconds: 60,
     logPrefix: '--',
     maxUnpagedResourceCount: 2000,
     showPerms: false,
-    aboutInstallDate: ${aboutInstallDate},
-    aboutInstallMessage: ${aboutInstallMsg},
-    tenantOptions: ${tenantOptions}
+    aboutInstallDate: '2026-06-08',
+    aboutInstallMessage: 'Eureka Dev Sunflower CSP 7',
+    enableEcsRequests: false,
+    isSingleTenant: true,
+    tenantOptions: {sul: {name: "sul", clientId: "sul-application"}}
   },
   modules, // Populated by stripes.modules.js
   branding: {
     logo: {
-      src: './logo.png',
-      alt: '${tenant_name}'
+      src: './tenant-assets/logo.png',
+      alt: 'Stanford University',
     },
     favicon: {
-      src: './favicon.png'
+      src: './tenant-assets/stanford-favicon.png',
     },
   }
 };
