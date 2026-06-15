@@ -27,10 +27,8 @@ module.exports = {
   '@folio/lists': {},
   '@folio/local-kb-admin': {},
   '@folio/marc-authorities': {},
-  "@folio/mosaic-settings": {},
   '@folio/myprofile' : {},
   '@folio/notes' : {},
-  '@folio/oai-pmh' : {},
   '@folio/orders': {},
   '@folio/organizations' : {},
   '@folio/serials-management' : {},
@@ -52,6 +50,7 @@ module.exports = {
   '@folio/plugin-find-po-line': {},
   '@folio/plugin-find-user' : {},
   '@folio/plugin-query-builder': {},
+  '@folio/plugin-select-application' : {},
   '@folio/quick-marc': {},
   '@folio/receiving' : {},
   '@folio/remote-storage' : {},
@@ -64,6 +63,4 @@ module.exports = {
   '@folio/tags': {},
   '@folio/tenant-settings' : {},
   '@folio/users' : {},
-  '@folio/plugin-select-application' : {},
-  '@folio/lists': {}
 };
