@@ -23,6 +23,7 @@ module.exports = {
   '@folio/handler-stripes-registry': {},
   '@folio/inventory' : {},
   '@folio/invoice': {},
+  '@folio/ld-folio-wrapper': {},
   '@folio/licenses': {},
   '@folio/lists': {},
   '@folio/local-kb-admin': {},
