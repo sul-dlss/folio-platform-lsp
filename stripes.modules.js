@@ -54,6 +54,7 @@ module.exports = {
   '@folio/plugin-query-builder': {},
   '@folio/plugin-select-application' : {},
   '@folio/quick-marc': {},
+  '@folio/reading-room': {},
   '@folio/receiving' : {},
   '@folio/remote-storage' : {},
   '@folio/requests' : {},
