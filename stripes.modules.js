@@ -52,6 +52,7 @@ module.exports = {
   '@folio/plugin-find-user' : {},
   '@folio/plugin-query-builder': {},
   '@folio/quick-marc': {},
+  '@folio/reading-room' : {},
   '@folio/receiving' : {},
   '@folio/remote-storage' : {},
   '@folio/requests' : {},
@@ -64,5 +65,4 @@ module.exports = {
   '@folio/tenant-settings' : {},
   '@folio/users' : {},
   '@folio/plugin-select-application' : {},
-  '@folio/lists': {}
 };
