@@ -1,7 +1,7 @@
 FROM node:18-alpine AS stripes_build
 
 # Set build arguments with default values
-ARG OKAPI_URL=https://folio-stage-api.stanford.edu
+ARG OKAPI_URL=https://folio-prod-api.stanford.edu
 ARG TENANT_ID=sul
 ARG BUILD_ARGS="--okapi $OKAPI_URL --tenant $TENANT_ID"
 ARG REGISTRY=folio
