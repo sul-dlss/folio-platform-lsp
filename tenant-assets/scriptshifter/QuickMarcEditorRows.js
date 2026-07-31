@@ -56,9 +56,11 @@ import {
   applyCentralTenantInHeaders,
   isControlNumberRow,
   isLeaderRow,
-  isReadOnlyTag,
 } from '../utils';
-import { useAuthorityLinking } from '../../hooks';
+import {
+  useAuthorityLinking,
+  useIsShared,
+} from '../../hooks';
 import { QuickMarcContext } from '../../contexts';
 import {
   QUICK_MARC_ACTIONS,
@@ -102,10 +104,7 @@ const QuickMarcEditorRows = ({
   const newRowRef = useRef(null);
   const rowContentWidth = useRef(null); // for max-width of resizable textareas
   const childCalloutRef = useRef(null);
-  const {
-    validationErrorsRef,
-    isShared,
-  } = useContext(QuickMarcContext);
+  const { validationErrorsRef } = useContext(QuickMarcContext);
 
   const {
     linkAuthority,
@@ -113,17 +112,18 @@ const QuickMarcEditorRows = ({
     linkableBibFields,
     autoLinkableBibFields,
   } = useAuthorityLinking({ marcType, action });
+  const { isShared } = useIsShared();
 
   const isRequestToCentralTenantFromMember = applyCentralTenantInHeaders(isShared, stripes, marcType)
     && action === QUICK_MARC_ACTIONS.EDIT;
 
   const fixedFieldInitialValues = () => {
-    return initialValues?.records.find(record => record.tag === FIXED_FIELD_TAG)?.content || {};
+    return initialValues.records.find(record => record.tag === FIXED_FIELD_TAG)?.content || {};
   };
 
   const isNewRow = useCallback((row) => {
-    return !initialValues?.records.find(record => record.id === row.id);
-  }, [initialValues?.records]);
+    return !initialValues.records.find(record => record.id === row.id);
+  }, [initialValues.records]);
 
   const addNewRow = useCallback(({ target }) => {
     const index = parseInt(target.dataset.index, 10);
@@ -289,7 +289,6 @@ const QuickMarcEditorRows = ({
 
             const isLeader = isLeaderRow(recordRow);
             const isDisabled = isReadOnly(recordRow, action, marcType);
-            const isTagDisabled = isReadOnlyTag(recordRow, marcType);
             const fieldValidationIssues = separateValidationErrorsAndWarnings(
               validationErrorsRef.current[recordRow.id],
             );
@@ -433,7 +432,7 @@ const QuickMarcEditorRows = ({
                     maxLength={TAG_FIELD_MAX_LENGTH}
                     marginBottom0
                     fullWidth
-                    disabled={isTagDisabled || !idx}
+                    disabled={isDisabled || !idx}
                     hasClearIcon={false}
                     onChange={onTagChange}
                     data-testid={`tag-field-${idx}`}
