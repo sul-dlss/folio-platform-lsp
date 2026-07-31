@@ -26,6 +26,14 @@ RUN apk upgrade --no-cache && \
 
 COPY tenant-assets/MainNav.css node_modules/@folio/stripes-core/src/components/MainNav
 COPY tenant-assets/Pane.css node_modules/@folio/stripes-components/lib/Pane
+COPY tenant-assets/scriptshifter/ContentField.css node_modules/@folio/quick-marc/src/QuickMarcEditor/QuickMarcEditorRows/ContentField/ContentField.css
+COPY tenant-assets/scriptshifter/ContentField.js node_modules/@folio/quick-marc/src/QuickMarcEditor/QuickMarcEditorRows/ContentField/ContentField.js
+COPY tenant-assets/scriptshifter/ScriptShifter.js node_modules/@folio/quick-marc/src/QuickMarcEditor/QuickMarcEditorRows/ContentField/ScriptShifter.js
+COPY tenant-assets/scriptshifter/ScriptShifterButton.js node_modules/@folio/quick-marc/src/QuickMarcEditor/QuickMarcEditorRows/ContentField/ScriptShifterButton.js
+COPY tenant-assets/scriptshifter/ScriptShifterButton.css node_modules/@folio/quick-marc/src/QuickMarcEditor/QuickMarcEditorRows/ContentField/ScriptShifterButton.css
+COPY tenant-assets/scriptshifter/QuickMarcEditorRows.js node_modules/@folio/quick-marc/src/QuickMarcEditor/QuickMarcEditorRows/QuickMarcEditorRows.js
+COPY tenant-assets/scriptshifter/en.json node_modules/@folio/quick-marc/translations/ui-quick-marc/en.json
+
 RUN yarn build output $BUILD_ARGS
 
 FROM nginx:stable-alpine
