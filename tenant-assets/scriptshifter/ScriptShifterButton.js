@@ -156,16 +156,13 @@ const ScriptShifterButton = ({
       id={`script-shifter-dropdown-${fieldId}`}
       open={open}
       onToggle={handleToggle}
-      renderTrigger={({ triggerRef, toggleMenu, ariaProps, keyHandler }) => (
+      renderTrigger={({ getTriggerProps }) => (
         <IconButton
-          ref={triggerRef}
+          {...getTriggerProps()}
           icon="lightning"
           data-testid={`script-shifter-button-${fieldId}`}
           aria-label={intl.formatMessage({ id: 'ui-quick-marc.record.scriptShifter.button' })}
           disabled={!text?.trim()}
-          onClick={toggleMenu}
-          onKeyDown={keyHandler}
-          {...ariaProps}
         />
       )}
       renderMenu={renderMenu}
