@@ -16,6 +16,14 @@ COPY . $STRIPES_HOME/
 
 WORKDIR $STRIPES_HOME
 
+# Install dependencies and build the application
+RUN apk upgrade --no-cache && \
+    apk add --no-cache alpine-sdk python3 && \
+    yarn config set python /usr/bin/python3 && \
+    yarn config set @folio:registry https://repository.folio.org/repository/npm-$REGISTRY/ && \
+    yarn install && \
+    yarn build-module-descriptors
+
 COPY tenant-assets/MainNav.css node_modules/@folio/stripes-core/src/components/MainNav
 COPY tenant-assets/Pane.css node_modules/@folio/stripes-components/lib/Pane
 COPY tenant-assets/scriptshifter/ContentField.css node_modules/@folio/quick-marc/src/QuickMarcEditor/QuickMarcEditorRows/ContentField/ContentField.css
@@ -25,15 +33,6 @@ COPY tenant-assets/scriptshifter/ScriptShifterButton.js node_modules/@folio/quic
 COPY tenant-assets/scriptshifter/ScriptShifterButton.css node_modules/@folio/quick-marc/src/QuickMarcEditor/QuickMarcEditorRows/ContentField/ScriptShifterButton.css
 COPY tenant-assets/scriptshifter/QuickMarcEditorRows.js node_modules/@folio/quick-marc/src/QuickMarcEditor/QuickMarcEditorRows/QuickMarcEditorRows.js
 COPY tenant-assets/scriptshifter/en.json node_modules/@folio/quick-marc/translations/ui-quick-marc/en.json
-
-# Install dependencies and build the application
-RUN apk upgrade --no-cache && \
-    apk add --no-cache alpine-sdk python3 && \
-    yarn config set python /usr/bin/python3 && \
-    yarn config set @folio:registry https://repository.folio.org/repository/npm-$REGISTRY/ && \
-    yarn install && \
-    yarn build-module-descriptors
-
 
 RUN yarn build output $BUILD_ARGS
 
