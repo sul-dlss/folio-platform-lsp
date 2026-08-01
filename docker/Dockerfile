@@ -34,6 +34,12 @@ COPY tenant-assets/scriptshifter/ScriptShifterButton.css node_modules/@folio/qui
 COPY tenant-assets/scriptshifter/QuickMarcEditorRows.js node_modules/@folio/quick-marc/src/QuickMarcEditor/QuickMarcEditorRows/QuickMarcEditorRows.js
 COPY tenant-assets/scriptshifter/en.json node_modules/@folio/quick-marc/translations/ui-quick-marc/en.json
 
+# @folio/quick-marc ships a pre-compiled translations/ui-quick-marc/compiled/ directory from its
+# npm publish step (see its "formatjs-compile" script). stripes-webpack's StripesTranslationsPlugin
+# prefers that compiled/ directory over the raw en.json above when it exists, so it must be removed
+# or our overridden en.json (with the ScriptShifter keys) is silently ignored at build time.
+RUN rm -rf node_modules/@folio/quick-marc/translations/ui-quick-marc/compiled
+
 RUN yarn build output $BUILD_ARGS
 
 FROM nginx:stable-alpine
