@@ -18,7 +18,6 @@ import {
   Loading,
 } from '@folio/stripes/components';
 
-import { MarcFieldContent } from '../../../common';
 import {
   DEFAULT_SCRIPT_SHIFTER_URL,
   getScriptShifterLanguages,
@@ -26,6 +25,28 @@ import {
 } from './ScriptShifter';
 
 import css from './ScriptShifterButton.css';
+
+// Matches a MARC subfield delimiter, e.g. "$a" in both "$a Something" and
+// "$aSomething" (with or without a space after the code).
+const SUBFIELD_CODE_RE = /\$([a-zA-Z0-9])/g;
+
+const splitIntoSubfields = (marcContent) => {
+  const matches = [...marcContent.matchAll(SUBFIELD_CODE_RE)];
+
+  return matches.map((match, index) => {
+    const start = match.index + match[0].length;
+    const end = matches[index + 1]?.index ?? marcContent.length;
+    const raw = marcContent.slice(start, end);
+    const value = raw.trim();
+
+    return {
+      code: `$${match[1]}`,
+      value,
+      leadingSpace: raw.startsWith(' ') ? ' ' : '',
+      trailingSpace: value.length && raw.endsWith(' ') ? ' ' : '',
+    };
+  });
+};
 
 const ScriptShifterButton = ({
   fieldId,
@@ -94,13 +115,15 @@ const ScriptShifterButton = ({
       return translateValue(langId, tDir, text);
     }
 
-    const subfields = new MarcFieldContent(text).map(subfield => subfield);
+    const subfields = splitIntoSubfields(text);
 
     return Promise.all(
       subfields.map(subfield => translateValue(langId, tDir, subfield.value)),
     ).then(translatedValues => subfields
-      .map((subfield, index) => `${subfield.code} ${translatedValues[index]}`)
-      .join(' '));
+      .map((subfield, index) => (
+        `${subfield.code}${subfield.leadingSpace}${translatedValues[index]}${subfield.trailingSpace}`
+      ))
+      .join(''));
   };
 
   const handleTranslate = (langId, tDir) => {
