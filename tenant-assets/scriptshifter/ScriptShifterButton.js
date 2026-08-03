@@ -18,6 +18,7 @@ import {
   Loading,
 } from '@folio/stripes/components';
 
+import { MarcFieldContent } from '../../../common';
 import {
   DEFAULT_SCRIPT_SHIFTER_URL,
   getScriptShifterLanguages,
@@ -78,19 +79,38 @@ const ScriptShifterButton = ({
     });
   };
 
+  const translateValue = (langId, tDir, value) => translateWithScriptShifter(scriptShifterUrl, {
+    text: value,
+    lang: langId,
+    tDir,
+    capitalize: capitalize ? 'first_word' : 'no_change',
+  }).then(result => result.output);
+
+  // MARC subfield codes (e.g. "$a", "$b") are not part of the language being
+  // transliterated, so they are stripped out and translated around, rather than
+  // relying on ScriptShifter's per-language tables to leave them untouched.
+  const translateContent = (langId, tDir) => {
+    if (!text.includes('$')) {
+      return translateValue(langId, tDir, text);
+    }
+
+    const subfields = new MarcFieldContent(text).map(subfield => subfield);
+
+    return Promise.all(
+      subfields.map(subfield => translateValue(langId, tDir, subfield.value)),
+    ).then(translatedValues => subfields
+      .map((subfield, index) => `${subfield.code} ${translatedValues[index]}`)
+      .join(' '));
+  };
+
   const handleTranslate = (langId, tDir) => {
     const translatingKeyValue = `${langId}-${tDir}`;
 
     setTranslatingKey(translatingKeyValue);
 
-    translateWithScriptShifter(scriptShifterUrl, {
-      text,
-      lang: langId,
-      tDir,
-      capitalize: capitalize ? 'first_word' : 'no_change',
-    })
-      .then(result => {
-        onTranslate(result.output);
+    translateContent(langId, tDir)
+      .then(output => {
+        onTranslate(output);
         setOpen(false);
       })
       .catch(() => {
