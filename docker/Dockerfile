@@ -24,8 +24,6 @@ RUN apk upgrade --no-cache && \
     yarn install && \
     yarn build-module-descriptors
 
-COPY tenant-assets/MainNav.css node_modules/@folio/stripes-core/src/components/MainNav
-COPY tenant-assets/Pane.css node_modules/@folio/stripes-components/lib/Pane
 RUN yarn build output $BUILD_ARGS
 
 FROM nginx:stable-alpine
