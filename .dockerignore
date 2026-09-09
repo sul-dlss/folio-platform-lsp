@@ -1,0 +1,5 @@
+# Installed locally; the image runs its own `yarn install`. Without this the
+# 750MB+ node_modules tree is shipped into the build context.
+node_modules
+output
+.git

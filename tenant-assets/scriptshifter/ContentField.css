@@ -1,9 +1,0 @@
-.contentFieldWrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 4px;
-}
-
-.contentFieldWrapper > *:first-child {
-  flex: 1 1 auto;
-}
