@@ -18,11 +18,16 @@ WORKDIR $STRIPES_HOME
 
 # Install dependencies and build the application.
 # git is required to resolve the @folio/quick-marc fork (see package.json).
+#
+# The committed yarn.lock is excluded from the build context (.dockerignore) so
+# the image resolves dependencies fresh and generates its own lockfile. That
+# lockfile is published alongside the bundle in the final stage, and is the
+# record of what this image actually contains.
 RUN apk upgrade --no-cache && \
     apk add --no-cache alpine-sdk python3 git && \
     yarn config set python /usr/bin/python3 && \
     yarn config set @folio:registry https://repository.folio.org/repository/npm-$REGISTRY/ && \
-    yarn install --frozen-lockfile && \
+    yarn install && \
     yarn build-module-descriptors
 
 RUN yarn build output $BUILD_ARGS

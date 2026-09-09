@@ -34,6 +34,7 @@ Github repository for storing Eureka files required for installation.
   - ### yarn.lock
     File with UI dependencies. [yarn.lock](https://classic.yarnpkg.com/lang/en/docs/yarn-lock/)
 
+
 # Tenant customizations
 
 ## ScriptShifter (`@folio/quick-marc` fork)
@@ -54,30 +55,45 @@ Several FOLIO modules (e.g. `@folio/marc-authorities`) declare
 range. Without the resolution, Yarn installs a second, unpatched copy of
 quick-marc nested inside those modules.
 
-### Updating the pin after pushing to the fork
+### Publishing changes to the fork
 
-`yarn.lock` pins the fork to an exact commit, so **pushing new commits to
-`scriptshifter-10.0.4` does not change what gets built.** The Docker build runs
-`yarn install --frozen-lockfile` and will fail if the lockfile is stale.
+**Push to `scriptshifter-10.0.4` and the next image build picks it up. There is
+no pin to bump.**
 
-To move the pin, delete the `@folio/quick-marc` block from `yarn.lock` — the one
-beginning:
+The dependency is a git *branch* reference, and Yarn 1 re-resolves branch
+references to their current HEAD on any full install. The image build is always
+a full install: `.dockerignore` excludes the committed `yarn.lock`, so the
+container resolves dependencies from scratch and writes its own lockfile. That
+generated lockfile is published to `/usr/share/nginx/html/yarn.lock` and is the
+authoritative record of what a given image contains.
+
+The trade-off is that image builds are not byte-reproducible: rebuilding the
+same commit later can pick up newer fork commits and newer transitive versions.
+If you need to reproduce an image exactly, read the `yarn.lock` published inside
+it.
+
+### The committed `yarn.lock`
+
+Used for local development only; the image ignores it. It pins the fork to
+whichever commit was current when it was last written, so a local `yarn install`
+will *not* pick up new fork commits on its own.
+
+To refresh it locally, delete the `@folio/quick-marc` block — the one beginning:
 
 ```
 "@folio/quick-marc@^10.0.0", "@folio/quick-marc@jgreben/ui-quick-marc.git#scriptshifter-10.0.4":
 ```
 
-then let Yarn re-resolve just that entry:
+then re-resolve just that entry:
 
 ```sh
 yarn install
-git add yarn.lock && git commit -m "Bump @folio/quick-marc fork pin"
 ```
 
-Do **not** use `yarn upgrade @folio/quick-marc`. It re-resolves far more than the
-named package; in testing it also bumped `@folio/plugin-find-authority`,
-`@folio/stripes-types`, `core-js`, `lodash`, `dayjs` and several others. Deleting
-the single block touches nothing else.
+Avoid `yarn upgrade @folio/quick-marc`: it re-resolves far more than the named
+package. In testing it also bumped `@folio/plugin-find-authority`,
+`@folio/stripes-types`, `core-js`, `lodash` and `dayjs`. Deleting the single
+block touches nothing else.
 
 If you change the branch name or tag, update the reference in **both**
 `dependencies` and `resolutions`.

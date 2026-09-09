@@ -3,3 +3,8 @@
 node_modules
 output
 .git
+
+# The image resolves dependencies fresh and generates its own yarn.lock, which
+# is then published to /usr/share/nginx/html/yarn.lock. The committed lockfile
+# is for local development only.
+yarn.lock
