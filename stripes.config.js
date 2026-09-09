@@ -35,5 +35,13 @@ module.exports = {
     favicon: {
       src: './tenant-assets/stanford-favicon.png'
     },
+    // Applied as an inline style on the MainNav <header> by stripes-core
+    // (MainNav.js). Replaces the former tenant-assets/MainNav.css override,
+    // whose only functional content was this one colour.
+    style: {
+      mainNav: {
+        backgroundColor: 'rgb(0,0,0,.8)',
+      },
+    },
   }
 };
