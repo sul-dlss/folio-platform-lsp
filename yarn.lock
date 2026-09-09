@@ -2324,8 +2324,8 @@
 
 "@folio/quick-marc@^10.0.0", "@folio/quick-marc@jgreben/ui-quick-marc.git#scriptshifter-10.0.4":
   version "10.0.4"
-  uid d1dbd95290b0c2b4145e0dd877d8f9082b0e0473
-  resolved "https://codeload.github.com/jgreben/ui-quick-marc/tar.gz/d1dbd95290b0c2b4145e0dd877d8f9082b0e0473"
+  uid "9dd225a5b0d3fe51547a7d72a335e6b5578c722f"
+  resolved "https://codeload.github.com/jgreben/ui-quick-marc/tar.gz/9dd225a5b0d3fe51547a7d72a335e6b5578c722f"
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
