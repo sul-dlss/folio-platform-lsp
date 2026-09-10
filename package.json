@@ -65,7 +65,7 @@
     "@folio/plugin-find-user": "8.0.0",
     "@folio/plugin-query-builder": "2.0.3",
     "@folio/plugin-select-application": "2.0.0",
-    "@folio/quick-marc": "jgreben/ui-quick-marc.git#scriptshifter-10.0.4",
+    "@folio/quick-marc": "sul-dlss/ui-quick-marc.git#scriptshifter-10.0.4",
     "@folio/reading-room": "2.0.1",
     "@folio/receiving": "7.0.2",
     "@folio/remote-storage": "7.0.1",
@@ -103,7 +103,7 @@
     "zustand": "^4.1.1"
   },
   "resolutions": {
-    "@folio/quick-marc": "jgreben/ui-quick-marc.git#scriptshifter-10.0.4",
+    "@folio/quick-marc": "sul-dlss/ui-quick-marc.git#scriptshifter-10.0.4",
     "@babel/helpers": "7.26.10",
     "@babel/runtime": "7.26.10",
     "@rehooks/local-storage": "2.4.5",
