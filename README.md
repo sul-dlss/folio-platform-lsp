@@ -43,7 +43,7 @@ The ScriptShifter transliteration UI is not part of upstream `@folio/quick-marc`
 It ships from a fork, referenced in `package.json`:
 
 ```json
-"@folio/quick-marc": "jgreben/ui-quick-marc.git#scriptshifter-10.0.4"
+"@folio/quick-marc": "sul-dlss/ui-quick-marc.git#scriptshifter-10.0.4"
 ```
 
 The branch is cut from the `v10.0.4` tag so it stays in step with the
@@ -81,7 +81,7 @@ will *not* pick up new fork commits on its own.
 To refresh it locally, delete the `@folio/quick-marc` block — the one beginning:
 
 ```
-"@folio/quick-marc@^10.0.0", "@folio/quick-marc@jgreben/ui-quick-marc.git#scriptshifter-10.0.4":
+"@folio/quick-marc@^10.0.0", "@folio/quick-marc@sul-dlss/ui-quick-marc.git#scriptshifter-10.0.4":
 ```
 
 then re-resolve just that entry:
