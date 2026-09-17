@@ -43,11 +43,13 @@ The ScriptShifter transliteration UI is not part of upstream `@folio/quick-marc`
 It ships from a fork, referenced in `package.json` by an **immutable tag**:
 
 ```json
-"@folio/quick-marc": "sul-dlss/ui-quick-marc.git#v10.0.4-sul.1"
+"@folio/quick-marc": "sul-dlss/ui-quick-marc.git#v10.0.4-sul.2"
 ```
 
-The fork is cut from the `v10.0.4` tag so it stays in step with the
-`@folio/quick-marc` version the rest of the platform expects.
+The fork is currently cut from the `v10.0.4` tag so it stays in step with the
+`@folio/quick-marc` version the rest of the platform expects. The changes should 
+be ported to future releases of quick-marc until the day comes when this work is
+folded into the `@folio/quick-marc`.
 
 The same reference is repeated under `resolutions`, and that is required.
 Several FOLIO modules (e.g. `@folio/marc-authorities`) declare
@@ -58,20 +60,7 @@ quick-marc nested inside those modules.
 ### Pin a tag, never a branch
 
 **Do not point this dependency at a branch name.** Pushing to a branch does not
-reliably ship, and it fails *silently*. Observed on 2026-09-16:
-
-* fork commit `43d8d63` was pushed to `scriptshifter-10.0.4` at 23:24 UTC;
-* the image build ran a full, uncached `yarn install` nine minutes later;
-* it installed `9dd225a`, the previous commit, and the build went green.
-
-The build log says why:
-
-```
-warning Pattern ["@folio/quick-marc@sul-dlss/ui-quick-marc.git#scriptshifter-10.0.4",
-"@folio/quick-marc@^10.0.0"] is trying to unpack in the same destination
-".../npm-@folio-quick-marc-10.0.4-9dd225a.../node_modules/@folio/quick-marc"
-as pattern [...]. This could result in non-deterministic behavior, skipping.
-```
+reliably ship, and it fails *silently*. 
 
 Because `@folio/marc-authorities` also requests quick-marc by semver range, Yarn
 merges the two requests into a single slot and warns that the result is
@@ -81,20 +70,25 @@ is harmless.
 
 ### Releasing a change to the fork
 
-1. In the fork, tag the commit and push the tag:
+1. In the fork, look up sul tags: `git tag -l '*-sul.*'`
+  ```sh
+    git tag -l '*-sul.*'
+    v10.0.4-sul.2
+  ```
+2. In the fork, bump and tag the commit and push the tag:
 
    ```sh
-   git tag v10.0.4-sul.2 && git push origin v10.0.4-sul.2
+   git tag v10.0.4-sul.3 && git push origin v10.0.4-sul.3
    ```
 
-2. Here, bump the tag in **both** `dependencies` and `resolutions`. Nothing else
-   needs editing. Yarn keys lockfile entries on the reference string, so changing
+3. Here in `package.json`, bump the tag in **both** the `dependencies` and `resolutions` sections. 
+   Nothing else needs editing. Yarn keys lockfile entries on the reference string, so changing
    the tag invalidates that one entry and re-resolves it on the next
    `yarn install`, leaving every other package untouched.
 
-3. Rebuild the image.
+4. Rebuild the image by commiting and push ing the changes to the branch
 
-4. Verify what shipped rather than assuming it (below).
+5. Verify what shipped rather than assuming it (below).
 
 ### Verifying what an image contains
 
@@ -110,25 +104,6 @@ Confirm the `uid` is the commit you tagged. If it is an older commit, either the
 image was not rebuilt, or it was rebuilt but never rolled out: the build pushes to
 a *mutable* image tag (`ghcr.io/sul-dlss/folio-platform-lsp:R1-2025-csp-7-eureka-dev`),
 and overwriting that tag does not restart running containers.
-
-### Why this differs between environments
-
-This branch's `.dockerignore` excludes the committed `yarn.lock`, so the image
-re-resolves every dependency from scratch on each build. The `*-prod` branch does
-**not** exclude it, so prod installs exactly what its committed lockfile records.
-
-That difference matters if a branch reference is ever used instead of a tag:
-
-| Build | New commits on the referenced branch |
-| --- | --- |
-| this branch (lockfile discarded) | picked up, but non-deterministically, per the warning above |
-| `*-prod` (lockfile used) | **never** picked up; the lockfile holds the old commit until someone regenerates it |
-
-On prod, then, a branch reference reads as "always current" while shipping
-whichever commit the lockfile happens to hold. A tag keeps the shipped version
-visible in `package.json` and reviewable in the promotion diff — which is how
-every other `@folio/*` dependency in this repo is already pinned, each to an
-exact version.
 
 ### The committed `yarn.lock`
 
