@@ -52,5 +52,6 @@ COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY docker/entrypoint.sh /usr/bin/entrypoint.sh
 RUN mkdir /usr/share/nginx/html/sul
 COPY tenant-assets/logo.png /usr/share/nginx/html/sul/logo.png
+COPY tenant-assets/stanford-favicon.png /usr/share/nginx/html/sul/favicon.png
 
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
